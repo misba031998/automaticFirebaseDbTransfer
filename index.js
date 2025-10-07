@@ -3,6 +3,9 @@ const sql = require('mssql');
 const cron = require('node-cron');
 const config = require('./config'); // Your dynamic configuration
 
+//dummy port add
+const http = require('http');
+const PORT = process.env.PORT || 3000;
 // Initialize Firebase Admin SDK
 admin.initializeApp({
   credential: admin.credential.cert(require('./serviceAccount.json')),  // Your service account
@@ -243,3 +246,13 @@ cron.schedule('0 */2 * * *', async () => {
 
 // Optionally, call it once manually for immediate sync
 syncDataToMSSQL().catch(err => console.error('Manual sync failed:', err));
+
+
+
+// Dummy server just to keep Render happy
+http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Background worker is running.\n');
+}).listen(PORT, () => {
+  console.log(`HTTP server running on port ${PORT}`);
+});
